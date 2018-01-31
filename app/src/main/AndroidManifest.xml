@@ -3,18 +3,37 @@
     package="online.himakeit.lightmusic">
 
     <application
+        android:name=".AppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        android:theme="@style/AppThemeLight">
+        <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NetSearchWordsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PlaylistManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LocalMusicManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.RecentPlaylistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PlaylistActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

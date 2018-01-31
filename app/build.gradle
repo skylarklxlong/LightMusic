@@ -10,6 +10,8 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -27,9 +29,32 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    /**
+     * 遵循Material的对话框
+     * https://github.com/afollestad/material-dialogs
+     *
+     * 如果使用0.9.6.0这个版本的话就会报jar包重复的错误
+     */
+    implementation 'com.afollestad.material-dialogs:core:0.9.1.0'
+//    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    /**
+     * 主题框架
+     * https://github.com/naman14/app-theme-engine
+     * http://blog.csdn.net/archer_zoro/article/details/56304498
+     */
+    compile('com.github.naman14:app-theme-engine:0.5.2@aar') {
+        transitive = true
+    }
+
+    /**
+     * 图片加载引擎框架
+     * https://www.jianshu.com/p/8ff81be83101
+     */
+    compile 'com.facebook.fresco:fresco:0.9.0'
 }

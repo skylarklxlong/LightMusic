@@ -1,7 +1,11 @@
-package online.himakeit.lightmusic;
+package online.himakeit.lightmusic.ui.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import online.himakeit.lightmusic.R;
+
 /**
  * @author：LiXueLong
  * @date:2018/1/29-16:10
@@ -15,5 +19,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+
+        startActivity(new Intent(this,MainActivity.class));
     }
 }

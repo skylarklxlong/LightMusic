@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ffce3d3e</color>
+    <color name="colorPrimaryDark">#ffa13b41</color>
+    <color name="colorAccent">#ffce3d3e</color>
+
+    <color name="colorPrimaryDarkTheme">#ff343a49</color>
+    <color name="colorPrimaryDarkDarkTheme">#ff2a2e3a</color>
+    <color name="colorAccentDarkTheme">#ffffffff</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="normalBackground">#fff2f4f5</color>
+
+    <color name="text_color">#FF000000</color>
+    <color name="text_color_01">#696969</color>
+    <color name="small_font">#FF757575</color>
+
+
+    <color name="refresh_progress_1">#e91e63</color>
+    <color name="refresh_progress_2">#00b0ff</color>
+    <color name="refresh_progress_3">@color/colorPrimary</color>
 </resources>
