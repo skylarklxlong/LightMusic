@@ -25,7 +25,7 @@
                 android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/iv_bar_music"
-                android:background="@drawable/actionbar_disco"
+                android:background="@drawable/selector_actionbar_disco"
                 android:clickable="true" />
 
             <ImageView
@@ -33,7 +33,7 @@
                 android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:background="@drawable/actionbar_music"
+                android:background="@drawable/selector_actionbar_music"
                 android:clickable="true" />
 
             <ImageView
@@ -41,7 +41,7 @@
                 android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/iv_bar_music"
-                android:background="@drawable/actionbar_friends"
+                android:background="@drawable/selector_actionbar_friends"
                 android:clickable="true" />
 
             <ImageView

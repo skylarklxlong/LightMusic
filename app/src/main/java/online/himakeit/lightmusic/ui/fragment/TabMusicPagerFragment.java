@@ -44,8 +44,8 @@ public class TabMusicPagerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_music, container, false);
 
-        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_tabmusic);
-        mRecyclerView = view.findViewById(R.id.recycler_tabmusic);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_tabmusic);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_tabmusic);
 
         mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);

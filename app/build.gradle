@@ -11,6 +11,11 @@ android {
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        //start
+        renderscriptTargetApi 17
+        renderscriptSupportModeEnabled true
+        //end
+
         multiDexEnabled true
     }
     buildTypes {
@@ -34,6 +39,33 @@ dependencies {
     })
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
+
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+
+    /**
+     * gson
+     */
+    compile 'com.google.code.gson:gson:2.2.4'
+
+    /**
+     * retrofit2
+     */
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+
+    /**
+     * okhttp3
+     */
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    /**
+     *   网络监测 chuck
+     *   api >= 16
+     */
+//    debugCompile 'com.readystatesoftware.chuck:library:1.0.4'
+//    releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.0.4'
 
     /**
      * 遵循Material的对话框

@@ -2,6 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="online.himakeit.lightmusic">
 
+    <!-- 允许应用获取网络信息状态，如当前的网络连接是否有效。 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 允许应用可以访问网络。 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允许应用写入外部存储。 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许应用读取外部存储。 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 允许应用访问手机状态。 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".AppContext"
         android:allowBackup="true"
@@ -34,6 +46,8 @@
         <activity
             android:name=".ui.activity.PlaylistActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.RadioDetailActivity" />
+        <activity android:name=".ui.activity.AlbumsDetailActivity"></activity>
     </application>
 
 </manifest>

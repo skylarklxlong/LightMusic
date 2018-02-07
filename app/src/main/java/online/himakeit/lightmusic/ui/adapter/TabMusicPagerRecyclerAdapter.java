@@ -307,18 +307,18 @@ public class TabMusicPagerRecyclerAdapter extends RecyclerView.Adapter<TabMusicP
         public ItemViewHolder(View itemView) {
             super(itemView);
 
-            mIvItemImg = itemView.findViewById(R.id.iv_tab_music_item_img);
-            mTvItemTitle = itemView.findViewById(R.id.tv_tab_music_item_title);
-            mTvItemCount = itemView.findViewById(R.id.tv_tab_music_item_count);
+            mIvItemImg = (ImageView) itemView.findViewById(R.id.iv_tab_music_item_img);
+            mTvItemTitle = (TextView) itemView.findViewById(R.id.tv_tab_music_item_title);
+            mTvItemCount = (TextView) itemView.findViewById(R.id.tv_tab_music_item_count);
 
-            mSdvPlayListImg = itemView.findViewById(R.id.simple_drawee_tab_music_playlist_img);
-            mIvPlayListMenu = itemView.findViewById(R.id.iv_tab_music_playlist_menu);
-            mTvPlayListTitle = itemView.findViewById(R.id.tv_tab_music_playlist_title);
-            mTvPlayListCount = itemView.findViewById(R.id.tv_tab_music_playlist_count);
+            mSdvPlayListImg = (SimpleDraweeView) itemView.findViewById(R.id.simple_drawee_tab_music_playlist_img);
+            mIvPlayListMenu = (ImageView) itemView.findViewById(R.id.iv_tab_music_playlist_menu);
+            mTvPlayListTitle = (TextView) itemView.findViewById(R.id.tv_tab_music_playlist_title);
+            mTvPlayListCount = (TextView) itemView.findViewById(R.id.tv_tab_music_playlist_count);
 
-            mIvExpandableImg = itemView.findViewById(R.id.iv_tab_music_expandable_img);
-            mIvExpandableMenu = itemView.findViewById(R.id.iv_tab_music_expandable_menu);
-            mTvExpandableTitle = itemView.findViewById(R.id.tv_tab_music_expandable_title);
+            mIvExpandableImg = (ImageView) itemView.findViewById(R.id.iv_tab_music_expandable_img);
+            mIvExpandableMenu = (ImageView) itemView.findViewById(R.id.iv_tab_music_expandable_menu);
+            mTvExpandableTitle = (TextView) itemView.findViewById(R.id.tv_tab_music_expandable_title);
 
             itemView.setOnClickListener(this);
         }

@@ -13,10 +13,16 @@
 
     <color name="text_color">#FF000000</color>
     <color name="text_color_01">#696969</color>
+    <color name="text_color_02">@color/colorWhite</color>
     <color name="small_font">#FF757575</color>
 
 
     <color name="refresh_progress_1">#e91e63</color>
     <color name="refresh_progress_2">#00b0ff</color>
     <color name="refresh_progress_3">@color/colorPrimary</color>
+
+    <color name="bottom_text">#c1c0c0</color>
+    <color name="notification_bak">#47fafafa</color>
+
+    <color name="line_color_white">#E0E0E0</color>
 </resources>
