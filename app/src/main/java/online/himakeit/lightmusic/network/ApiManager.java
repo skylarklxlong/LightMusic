@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @date：2018/2/5
  * @mail1：skylarklxlong@outlook.com
  * @mail2：li_xuelong@126.com
- * @des:
+ * @des: 这个都已经是新开的线程了，没有必要再将其在线程中使用
  */
 public class ApiManager {
     private static ApiManager apiManager;
@@ -99,10 +99,11 @@ public class ApiManager {
 
     /**
      * 获取轮播图图片
+     *
      * @param num
      * @param callBack
      */
-    public void getPicData(int num, BaiduNetCallBack<BaiduMusicPicBaseEntity> callBack){
+    public void getPicData(int num, BaiduNetCallBack<BaiduMusicPicBaseEntity> callBack) {
         Map<String, String> params = BaiduNetHelper.getMusicApiCommonParams("baidu.ting.plaza.getFocusPic");
         params.put("num", String.valueOf(num));
         getBaiduMusicApi().getPicData(params).enqueue(callBack);

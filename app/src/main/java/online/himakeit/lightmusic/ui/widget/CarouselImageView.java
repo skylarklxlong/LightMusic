@@ -1,12 +1,8 @@
 package online.himakeit.lightmusic.ui.widget;
 
 import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -17,16 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.facebook.common.logging.FLog;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.image.QualityInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +26,7 @@ import online.himakeit.lightmusic.bean.BaiduMusicPicBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicPicDataEntity;
 import online.himakeit.lightmusic.network.ApiManager;
 import online.himakeit.lightmusic.network.BaiduNetCallBack;
+import online.himakeit.lightmusic.util.LogUtils;
 
 /**
  * @author：LiXueLong
@@ -63,10 +51,11 @@ public class CarouselImageView extends FrameLayout {
     private final static boolean AUTO_PLAY = true;
 
     private CarouselImageViewPagerAdapter mViewPagerAdapter;
-    private ArrayList<String> imageNet = new ArrayList<>();
-    private List<ImageView> imageViewList;
-    private List<View> dotViewList;
+    private ArrayList<String> imageNet = new ArrayList<>(7);
+    private List<ImageView> imageViewList = new ArrayList<>();
+    private List<View> dotViewList = new ArrayList<>();
     private ViewPager viewPager;
+    private Context mContext;
     /**
      * 当前轮播页面
      */
@@ -87,15 +76,18 @@ public class CarouselImageView extends FrameLayout {
 
     public CarouselImageView(Context context) {
         super(context);
+        mContext = context;
 
     }
 
     public CarouselImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+        mContext = context;
     }
 
     public CarouselImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         initImageData();
         initView(context);
         if (AUTO_PLAY) {
@@ -103,96 +95,43 @@ public class CarouselImageView extends FrameLayout {
         }
     }
 
+    ArrayList<BaiduMusicPicDataEntity> mDataList = new ArrayList<>();
+
     private void initImageData() {
-        new AsyncTask<Void, Void, Void>() {
+        ApiManager.getInstance().getPicData(7, new BaiduNetCallBack<BaiduMusicPicBaseEntity>() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                ApiManager.getInstance().getPicData(7, new BaiduNetCallBack<BaiduMusicPicBaseEntity>() {
-                    @Override
-                    public void onSuccess(BaiduMusicPicBaseEntity entity) {
-                        if (entity != null) {
-                            if (entity.getError_code() == 22000) {
-                                ArrayList<BaiduMusicPicDataEntity> picDataEntityArrayList = entity.getPic();
-                                if (picDataEntityArrayList != null && picDataEntityArrayList.size() > 0) {
-                                    imageNet.clear();
-                                    for (int i = 0; i < picDataEntityArrayList.size(); i++) {
-                                        BaiduMusicPicDataEntity picDataEntity = picDataEntityArrayList.get(i);
-                                        imageNet.add(picDataEntity.getRandpic());
-                                    }
-                                }
+            public void onSuccess(BaiduMusicPicBaseEntity entity) {
+                if (entity != null) {
+                    if (entity.getError_code() == 22000) {
+                        mDataList.addAll(entity.getPic());
+                        if (mDataList != null && mDataList.size() > 0) {
+                            imageNet.clear();
+                            for (int i = 0; i < mDataList.size(); i++) {
+                                imageNet.add(mDataList.get(i).getRandpic());
+
+                                Glide.with(mContext)
+                                        .load(imageNet.get(i))
+                                        .centerCrop()
+                                        .error(R.drawable.placeholder_disk_210)
+                                        .placeholder(R.drawable.placeholder_disk_210)
+                                        .into(imageViewList.get(i));
+                                LogUtils.show("======" + imageNet.get(i));
                             }
+
                         }
                     }
-                });
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                for (int i = 0; i < 7; i++) {
-                    imageViewList.get(i).setImageURI(Uri.parse(imageNet.get(i)));
                 }
             }
-        }.execute();
+        });
 
-        for (int i = 0; i < 7; i++) {
-            imageNet.add("");
-        }
-
-        imageViewList = new ArrayList<>();
-        dotViewList = new ArrayList<>();
     }
+
     private void initView(Context mContext) {
         LayoutInflater.from(mContext).inflate(R.layout.layout_carousel_image_view, this, true);
-        for (String imagesId : imageNet) {
-            final SimpleDraweeView mAlbumArt = new SimpleDraweeView(mContext);
-            ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
-                @Override
-                public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                    if (imageInfo == null) {
-                        return;
-                    }
-                    QualityInfo qualityInfo = imageInfo.getQualityInfo();
-                    FLog.d("Final image received! " +
-                                    "Size %d x %d",
-                            "Quality level %d, good enough: %s, full quality: %s",
-                            imageInfo.getWidth(),
-                            imageInfo.getHeight(),
-                            qualityInfo.getQuality(),
-                            qualityInfo.isOfGoodEnoughQuality(),
-                            qualityInfo.isOfFullQuality());
-                }
 
-                @Override
-                public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
-
-                }
-
-                @Override
-                public void onFailure(String id, Throwable throwable) {
-                    mAlbumArt.setImageURI(Uri.parse("res:/" + R.drawable.placeholder_disk_210));
-                }
-            };
-            Uri uri = null;
-            try {
-                uri = Uri.parse(imagesId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (uri != null) {
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri).build();
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(mAlbumArt.getController())
-                        .setImageRequest(request)
-                        .setControllerListener(controllerListener)
-                        .build();
-                mAlbumArt.setController(controller);
-            } else {
-                mAlbumArt.setImageURI(Uri.parse("res:/" + R.drawable.placeholder_disk_210));
-            }
-
-            mAlbumArt.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageViewList.add(mAlbumArt);
+        for (int i = 0; i < 7; i++) {
+            ImageView mIvImg = new ImageView(mContext);
+            imageViewList.add(mIvImg);
         }
 
         dotViewList.add(findViewById(R.id.v_dot1));
