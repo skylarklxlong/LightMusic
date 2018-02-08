@@ -1,6 +1,5 @@
 package online.himakeit.lightmusic.ui.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
@@ -87,33 +85,20 @@ public class TabNetPagerSongRankFragment extends BaseAttachFragment {
 
     private void loadData() {
         for (int i = 0; i < mRankCategroyList.length; i++) {
-            new LoadDataAsyncTask().execute(mRankCategroyList[i]);
-        }
-    }
-
-    private class LoadDataAsyncTask extends AsyncTask<Integer, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            ApiManager.getInstance().getSongRankData(integers[0], 0, 3, new BaiduNetCallBack<BaiduMusicSongRankEntity>() {
+            ApiManager.getInstance().getSongRankData(mRankCategroyList[i], 0, 3, new BaiduNetCallBack<BaiduMusicSongRankEntity>() {
                 @Override
                 public void onSuccess(BaiduMusicSongRankEntity baiduMusicSongRankEntity) {
                     if (baiduMusicSongRankEntity != null) {
                         if (baiduMusicSongRankEntity.getSong_list() != null && baiduMusicSongRankEntity.getSong_list().size() > 0) {
                             mDataList.addAll(baiduMusicSongRankEntity.getSong_list());
+
+                            mAdapter.updateAdapter(mDataList);
+                            mFlContainer.removeAllViews();
+                            mFlContainer.addView(mMainView);
                         }
                     }
                 }
             });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mAdapter.updateAdapter(mDataList);
-            mFlContainer.removeAllViews();
-            mFlContainer.addView(mMainView);
         }
     }
 
@@ -146,21 +131,21 @@ public class TabNetPagerSongRankFragment extends BaseAttachFragment {
             holder.mTv01.setText(rankSongListEntity01.getTitle() + "-" + rankSongListEntity01.getAuthor());
             holder.mTv02.setText(rankSongListEntity02.getTitle() + "-" + rankSongListEntity02.getAuthor());
             holder.mTv03.setText(rankSongListEntity03.getTitle() + "-" + rankSongListEntity03.getAuthor());
-            holder.mSimpleDraweeImg.setImageResource(picArray[position]);
+            holder.mIvImg.setImageResource(picArray[position]);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mDataList == null ? 0 : mDataList.size() / 3;
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
-            SimpleDraweeView mSimpleDraweeImg;
             TextView mTv01, mTv02, mTv03;
+            ImageView mIvImg;
 
             public ItemViewHolder(View itemView) {
                 super(itemView);
-                mSimpleDraweeImg = (SimpleDraweeView) itemView.findViewById(R.id.simple_drawee_item_tab_net_song_rank_image);
+                mIvImg = (ImageView) itemView.findViewById(R.id.iv_item_tab_net_song_rank_img);
                 mTv01 = (TextView) itemView.findViewById(R.id.tv_item_tab_net_song_rank_first);
                 mTv02 = (TextView) itemView.findViewById(R.id.tv_item_tab_net_song_rank_second);
                 mTv03 = (TextView) itemView.findViewById(R.id.tv_item_tab_net_song_rank_third);

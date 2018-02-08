@@ -3,8 +3,6 @@ package online.himakeit.lightmusic.ui.fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +38,7 @@ import online.himakeit.lightmusic.ui.activity.AlbumsDetailActivity;
 import online.himakeit.lightmusic.ui.activity.PlaylistActivity;
 import online.himakeit.lightmusic.ui.activity.RadioDetailActivity;
 import online.himakeit.lightmusic.ui.widget.CarouselImageView;
+import online.himakeit.lightmusic.util.LogUtils;
 import online.himakeit.lightmusic.util.PreferencesUtility;
 
 /**
@@ -64,7 +58,6 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
     private CarouselImageView mCarouselImageView;
     private String mPosition;
     private NewSongCommonRecyclerAdapter mMixOneAdapter, mDiyAdapter, mRadioAdapter;
-    private BaiduMusicBaseEntity<BaiduMusicNewSongEntity> mData = new BaiduMusicBaseEntity<>();
     private HashMap<String, View> mViewHashMap;
 
     @Override
@@ -104,10 +97,6 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
         mLlItemLayout.setVisibility(View.INVISIBLE);
         mLlViewContent.addView(mLoadingView);
 
-        mMixOneAdapter = new NewSongCommonRecyclerAdapter(null, 1);
-        mDiyAdapter = new NewSongCommonRecyclerAdapter(null, 2);
-        mRadioAdapter = new NewSongCommonRecyclerAdapter(null, 3);
-
         TextView mTvChangeItem = (TextView) mMainLayoutView.findViewById(R.id.tv_tab_net_new_song_change_item);
         mTvChangeItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,101 +129,93 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
 
     private void reloadAdapter() {
 
-        new AsyncTask<Void, Void, BaiduMusicBaseEntity<BaiduMusicNewSongEntity>>() {
+        ApiManager.getInstance().getNewSongData(3, new BaiduNetCallBack<BaiduMusicBaseEntity<BaiduMusicNewSongEntity>>() {
             @Override
-            protected BaiduMusicBaseEntity<BaiduMusicNewSongEntity> doInBackground(Void... voids) {
-
-                ApiManager.getInstance().getNewSongData(3, new BaiduNetCallBack<BaiduMusicBaseEntity<BaiduMusicNewSongEntity>>() {
-                    @Override
-                    public void onSuccess(BaiduMusicBaseEntity<BaiduMusicNewSongEntity> newSongEntitys) {
-                        if (newSongEntitys != null) {
-                            BaiduMusicNewSongEntity newSongEntity = newSongEntitys.getResult();
-                            if (newSongEntity != null) {
-                                mData = newSongEntitys;
+            public void onSuccess(BaiduMusicBaseEntity<BaiduMusicNewSongEntity> newSongEntitys) {
+                if (newSongEntitys != null) {
+                    BaiduMusicNewSongEntity newSongEntity = newSongEntitys.getResult();
+                    if (newSongEntity != null) {
+                        LogUtils.show("===" + newSongEntity.getRadio().getResult().size());
+                        mAnchorRadioView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
+                        RecyclerView mRecyclerView01 = (RecyclerView) mAnchorRadioView.findViewById(R.id.recycler_tabnet_new_song);
+                        GridLayoutManager mGridLayoutManager01 = new GridLayoutManager(mContext, 3);
+                        mRecyclerView01.setLayoutManager(mGridLayoutManager01);
+                        mRadioAdapter = new NewSongCommonRecyclerAdapter(newSongEntitys, 3);
+                        mRecyclerView01.setAdapter(mRadioAdapter);
+                        mRecyclerView01.setHasFixedSize(true);
+                        TextView mTvMore01 = (TextView) mAnchorRadioView.findViewById(R.id.tv_item_tab_net_new_song_more);
+                        TextView mTvCate01 = (TextView) mAnchorRadioView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
+                        ImageView mIvImg01 = (ImageView) mAnchorRadioView.findViewById(R.id.iv_item_tab_net_new_song_img);
+                        mTvCate01.setText("主播电台");
+                        mIvImg01.setImageResource(R.drawable.ic_recommend_anchor_radio);
+                        mTvMore01.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO: 2018/2/7 do something
+//                        mChangeView.changeTo(1);
                             }
+                        });
+
+                        mNewAlbumView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
+                        RecyclerView mRecyclerView02 = (RecyclerView) mNewAlbumView.findViewById(R.id.recycler_tabnet_new_song);
+                        GridLayoutManager mGridLayoutManager02 = new GridLayoutManager(mContext, 3);
+                        mRecyclerView02.setLayoutManager(mGridLayoutManager02);
+                        mMixOneAdapter = new NewSongCommonRecyclerAdapter(newSongEntitys, 1);
+                        mRecyclerView02.setAdapter(mMixOneAdapter);
+                        mRecyclerView02.setHasFixedSize(true);
+                        TextView mTvMore02 = (TextView) mNewAlbumView.findViewById(R.id.tv_item_tab_net_new_song_more);
+                        TextView mTvCate02 = (TextView) mNewAlbumView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
+                        ImageView mIvImg02 = (ImageView) mNewAlbumView.findViewById(R.id.iv_item_tab_net_new_song_img);
+                        mTvCate02.setText("新专辑上架");
+                        mIvImg02.setImageResource(R.drawable.ic_recommend_new_album);
+                        mTvMore02.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO: 2018/2/7 do something
+//                        mChangeView.changeTo(1);
+                            }
+                        });
+
+                        mRecommendedSongListView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
+                        RecyclerView mRecyclerView03 = (RecyclerView) mRecommendedSongListView.findViewById(R.id.recycler_tabnet_new_song);
+                        GridLayoutManager mGridLayoutManager03 = new GridLayoutManager(mContext, 3);
+                        mRecyclerView03.setLayoutManager(mGridLayoutManager03);
+                        mDiyAdapter = new NewSongCommonRecyclerAdapter(newSongEntitys, 2);
+                        mRecyclerView03.setAdapter(mDiyAdapter);
+                        mRecyclerView03.setHasFixedSize(true);
+                        TextView mTvMore03 = (TextView) mRecommendedSongListView.findViewById(R.id.tv_item_tab_net_new_song_more);
+                        TextView mTvCate03 = (TextView) mRecommendedSongListView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
+                        ImageView mIvImg03 = (ImageView) mRecommendedSongListView.findViewById(R.id.iv_item_tab_net_new_song_img);
+                        mTvCate03.setText("推荐歌单");
+                        mIvImg03.setImageResource(R.drawable.ic_recommend_song_list);
+                        mTvMore03.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO: 2018/2/7 do something
+//                        mChangeView.changeTo(1);
+                            }
+                        });
+
+//                        mRadioAdapter.update(newSongEntitys);
+//                        mMixOneAdapter.update(newSongEntitys);
+//                        mDiyAdapter.update(newSongEntitys);
+
+                        mViewHashMap = new HashMap<>();
+                        mViewHashMap.put("推荐歌单", mRecommendedSongListView);
+                        mViewHashMap.put("最新专辑", mNewAlbumView);
+                        mViewHashMap.put("主播电台", mAnchorRadioView);
+                        mPosition = PreferencesUtility.getInstance(mContext).getItemPosition();
+                        mLlViewContent.removeView(mLoadingView);
+                        if (isDayFirst) {
+                            mContent.removeAllViews();
+                            mContent.addView(mMainLayoutView);
                         }
+                        addViews();
+                        mLlItemLayout.setVisibility(View.VISIBLE);
                     }
-                });
-                return mData;
-            }
-
-            @Override
-            protected void onPostExecute(BaiduMusicBaseEntity<BaiduMusicNewSongEntity> newSongEntitys) {
-                mAnchorRadioView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
-                RecyclerView mRecyclerView01 = (RecyclerView) mAnchorRadioView.findViewById(R.id.recycler_tabnet_new_song);
-                GridLayoutManager mGridLayoutManager01 = new GridLayoutManager(mContext, 3);
-                mRecyclerView01.setLayoutManager(mGridLayoutManager01);
-                mRecyclerView01.setAdapter(mRadioAdapter);
-                mRecyclerView01.setHasFixedSize(true);
-                TextView mTvMore01 = (TextView) mAnchorRadioView.findViewById(R.id.tv_item_tab_net_new_song_more);
-                TextView mTvCate01 = (TextView) mAnchorRadioView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
-                ImageView mIvImg01 = (ImageView) mAnchorRadioView.findViewById(R.id.iv_item_tab_net_new_song_img);
-                mTvCate01.setText("主播电台");
-                mIvImg01.setImageResource(R.drawable.ic_recommend_anchor_radio);
-                mTvMore01.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO: 2018/2/7 do something
-//                        mChangeView.changeTo(1);
-                    }
-                });
-
-                mNewAlbumView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
-                RecyclerView mRecyclerView02 = (RecyclerView) mNewAlbumView.findViewById(R.id.recycler_tabnet_new_song);
-                GridLayoutManager mGridLayoutManager02 = new GridLayoutManager(mContext, 3);
-                mRecyclerView02.setLayoutManager(mGridLayoutManager02);
-                mRecyclerView02.setAdapter(mMixOneAdapter);
-                mRecyclerView02.setHasFixedSize(true);
-                TextView mTvMore02 = (TextView) mNewAlbumView.findViewById(R.id.tv_item_tab_net_new_song_more);
-                TextView mTvCate02 = (TextView) mNewAlbumView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
-                ImageView mIvImg02 = (ImageView) mNewAlbumView.findViewById(R.id.iv_item_tab_net_new_song_img);
-                mTvCate02.setText("新专辑上架");
-                mIvImg02.setImageResource(R.drawable.ic_recommend_new_album);
-                mTvMore02.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO: 2018/2/7 do something
-//                        mChangeView.changeTo(1);
-                    }
-                });
-
-                mRecommendedSongListView = mLayoutInflater.inflate(R.layout.layout_fragment_tab_net_new_song, mLlViewContent, false);
-                RecyclerView mRecyclerView03 = (RecyclerView) mRecommendedSongListView.findViewById(R.id.recycler_tabnet_new_song);
-                GridLayoutManager mGridLayoutManager03 = new GridLayoutManager(mContext, 3);
-                mRecyclerView03.setLayoutManager(mGridLayoutManager03);
-                mRecyclerView03.setAdapter(mDiyAdapter);
-                mRecyclerView03.setHasFixedSize(true);
-                TextView mTvMore03 = (TextView) mRecommendedSongListView.findViewById(R.id.tv_item_tab_net_new_song_more);
-                TextView mTvCate03 = (TextView) mRecommendedSongListView.findViewById(R.id.tv_item_tab_net_new_song_categroy);
-                ImageView mIvImg03 = (ImageView) mRecommendedSongListView.findViewById(R.id.iv_item_tab_net_new_song_img);
-                mTvCate03.setText("推荐歌单");
-                mIvImg03.setImageResource(R.drawable.ic_recommend_song_list);
-                mTvMore03.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO: 2018/2/7 do something
-//                        mChangeView.changeTo(1);
-                    }
-                });
-
-                mRadioAdapter.update(newSongEntitys);
-                mMixOneAdapter.update(newSongEntitys);
-                mDiyAdapter.update(newSongEntitys);
-
-                mViewHashMap = new HashMap<>();
-                mViewHashMap.put("推荐歌单", mRecommendedSongListView);
-                mViewHashMap.put("最新专辑", mNewAlbumView);
-                mViewHashMap.put("主播电台", mAnchorRadioView);
-                mPosition = PreferencesUtility.getInstance(mContext).getItemPosition();
-                mLlViewContent.removeView(mLoadingView);
-                if (isDayFirst) {
-                    mContent.removeAllViews();
-                    mContent.addView(mMainLayoutView);
                 }
-                addViews();
-                mLlItemLayout.setVisibility(View.VISIBLE);
             }
-        }.execute();
+        });
     }
 
     @Override
@@ -302,13 +283,15 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder viewHolder = (ItemViewHolder) holder;
-                ImageRequest imageRequest = null;
                 if (mType == 1) {
                     if (mixOneEntityArrayList != null && mixOneEntityArrayList.size() > 0) {
                         final BaiduMusicNewSongMixOneEntity mixOneEntity = mixOneEntityArrayList.get(position);
-                        imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mixOneEntity.getPic()))
-                                .setResizeOptions(new ResizeOptions(160, 160))
-                                .build();
+                        Glide.with(mContext)
+                                .load(mixOneEntity.getPic())
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder_disk_300)
+                                .error(R.drawable.placeholder_disk_300)
+                                .into(viewHolder.mIvImg);
                         viewHolder.mTvName.setText(mixOneEntity.getTitle());
                         viewHolder.mTvSubName.setText(mixOneEntity.getAuthor());
                         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -327,9 +310,12 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
                 } else if (mType == 2) {
                     if (diyEntityArrayList != null && diyEntityArrayList.size() > 0) {
                         final BaiduMusicNewSongDiyEntity diyEntity = diyEntityArrayList.get(position);
-                        imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(diyEntity.getPic()))
-                                .setResizeOptions(new ResizeOptions(160, 160))
-                                .build();
+                        Glide.with(mContext)
+                                .load(diyEntity.getPic())
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder_disk_300)
+                                .error(R.drawable.placeholder_disk_300)
+                                .into(viewHolder.mIvImg);
                         viewHolder.mTvName.setText(diyEntity.getTitle());
                         viewHolder.mTvListenNum.setText(spannableString);
                         int count = diyEntity.getListenum();
@@ -356,9 +342,12 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
                 } else if (mType == 3) {
                     if (radioEntityArrayList != null && radioEntityArrayList.size() > 0) {
                         final BaiduMusicNewSongRadioEntity radioEntity = radioEntityArrayList.get(position);
-                        imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(radioEntity.getPic()))
-                                .setResizeOptions(new ResizeOptions(160, 160))
-                                .build();
+                        Glide.with(mContext)
+                                .load(radioEntity.getPic())
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder_disk_300)
+                                .error(R.drawable.placeholder_disk_300)
+                                .into(viewHolder.mIvImg);
                         viewHolder.mTvName.setText(radioEntity.getTitle());
                         viewHolder.mTvSubName.setText(radioEntity.getDesc());
                         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -374,12 +363,6 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
                         });
                     }
                 }
-
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(viewHolder.mSimpleDraweeArt.getController())
-                        .setImageRequest(imageRequest)
-                        .build();
-                viewHolder.mSimpleDraweeArt.setController(controller);
             }
 
         }
@@ -424,12 +407,12 @@ public class TabNetPagerNewSongFragment extends BaseAttachFragment {
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
-            SimpleDraweeView mSimpleDraweeArt;
+            ImageView mIvImg;
             TextView mTvListenNum, mTvName, mTvSubName;
 
             public ItemViewHolder(View itemView) {
                 super(itemView);
-                mSimpleDraweeArt = (SimpleDraweeView) itemView.findViewById(R.id.simple_drawee_item_tab_net_new_song_art);
+                mIvImg = (ImageView) itemView.findViewById(R.id.iv_item_tab_net_new_song_art);
                 mTvListenNum = (TextView) itemView.findViewById(R.id.tv_item_tab_net_new_song_listen_num);
                 mTvName = (TextView) itemView.findViewById(R.id.tv_item_tab_net_new_song_name);
                 mTvSubName = (TextView) itemView.findViewById(R.id.tv_item_tab_net_new_song_subname);

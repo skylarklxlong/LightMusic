@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +47,6 @@ public class TabNetPagerSongListFragment extends BaseAttachFragment {
     private int mLastVisibleItem;
     private SongListRecyclerAdapter mAdapter;
     private int pageCount = 1;
-    private ArrayList<BaiduMusicSongListContentEntity> mDataList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +82,7 @@ public class TabNetPagerSongListFragment extends BaseAttachFragment {
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
                         if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastVisibleItem + 1 == mAdapter.getItemCount()) {
-                            new LoadDataAsyncTask(++pageCount).execute();
+                            loadData(++pageCount);
                         }
                     }
 
@@ -95,50 +93,33 @@ public class TabNetPagerSongListFragment extends BaseAttachFragment {
                     }
                 });
 
-                loadData();
+                loadData(pageCount);
             }
         }
     }
 
-    private void loadData() {
-        new LoadDataAsyncTask(pageCount).execute();
-    }
+    private void loadData(final int pageNo) {
 
-    private class LoadDataAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        private int pageNo;
-
-        public LoadDataAsyncTask(int pageNo) {
-            this.pageNo = pageNo;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            ApiManager.getInstance().getSongListData(pageNo, 10, new BaiduNetCallBack<BaiduMusicSongListEntity>() {
-                @Override
-                public void onSuccess(BaiduMusicSongListEntity baiduMusicSongListEntity) {
-                    if (baiduMusicSongListEntity != null) {
+        ApiManager.getInstance().getSongListData(pageNo, 10, new BaiduNetCallBack<BaiduMusicSongListEntity>() {
+            @Override
+            public void onSuccess(BaiduMusicSongListEntity baiduMusicSongListEntity) {
+                if (baiduMusicSongListEntity != null) {
+                    if (baiduMusicSongListEntity.getError_code() == 22000) {
                         if (baiduMusicSongListEntity.getContent() != null && baiduMusicSongListEntity.getContent().size() > 0) {
-                            mDataList.addAll(baiduMusicSongListEntity.getContent());
+                            if (pageNo == 1) {
+                                mAdapter = new SongListRecyclerAdapter(baiduMusicSongListEntity.getContent());
+                                mRecyclerView.setAdapter(mAdapter);
+                                mFlContainer.removeAllViews();
+                                mFlContainer.addView(mMainView);
+                            } else {
+                                mAdapter.update(baiduMusicSongListEntity.getContent());
+                            }
                         }
                     }
                 }
-            });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (pageNo == 1) {
-                mAdapter = new SongListRecyclerAdapter(mDataList);
-                mRecyclerView.setAdapter(mAdapter);
-                mFlContainer.removeAllViews();
-                mFlContainer.addView(mMainView);
-            } else {
-                mAdapter.update(mDataList);
             }
-        }
+        });
+
     }
 
     class SongListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

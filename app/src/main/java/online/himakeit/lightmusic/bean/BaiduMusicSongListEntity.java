@@ -1,6 +1,6 @@
 package online.himakeit.lightmusic.bean;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author：LiXueLong
@@ -36,7 +36,7 @@ public class BaiduMusicSongListEntity {
     private int error_code;
     private int havemove;
     private int total;
-    private List<BaiduMusicSongListContentEntity> content;
+    private ArrayList<BaiduMusicSongListContentEntity> content;
 
     public int getError_code() {
         return error_code;
@@ -62,11 +62,11 @@ public class BaiduMusicSongListEntity {
         this.total = total;
     }
 
-    public List<BaiduMusicSongListContentEntity> getContent() {
+    public ArrayList<BaiduMusicSongListContentEntity> getContent() {
         return content;
     }
 
-    public void setContent(List<BaiduMusicSongListContentEntity> content) {
+    public void setContent(ArrayList<BaiduMusicSongListContentEntity> content) {
         this.content = content;
     }
 }

@@ -11,16 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="110dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/simple_drawee_item_tab_net_new_song_art"
+        <ImageView
+            android:id="@+id/iv_item_tab_net_new_song_art"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:placeholderImage="@drawable/placeholder_disk_300"
-            app:placeholderImageScaleType="centerCrop"
-            app:progressBarAutoRotateInterval="1000"
-            app:progressBarImage="@drawable/ic_progress_loading"
-            app:progressBarImageScaleType="centerInside" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"

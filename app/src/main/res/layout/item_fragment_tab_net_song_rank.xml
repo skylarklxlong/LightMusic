@@ -6,14 +6,14 @@
     android:paddingBottom="5dp"
     android:paddingTop="5dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/simple_drawee_item_tab_net_song_rank_image"
+    <ImageView
+        android:id="@+id/iv_item_tab_net_song_rank_img"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"  />
 
     <LinearLayout
         android:layout_width="wrap_content"
