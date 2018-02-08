@@ -167,11 +167,13 @@ public class AppContext extends Application {
                  */
                 response.newBuilder().removeHeader("Pragma")
                         .header("Cache-Control", cacheControlStr)
+//                        .addHeader("user-agent","Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
                         .build();
             } else {
                 int maxStale = 60 * 60 * 24 * 7;
                 response.newBuilder().removeHeader("Pragme")
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+//                        .addHeader("user-agent","Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
                         .build();
             }
             return response;
@@ -183,7 +185,7 @@ public class AppContext extends Application {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             long t1 = System.nanoTime();
-            Response response = chain.proceed(chain.request());
+            Response response = chain.proceed(request);
             long t2 = System.nanoTime();
             MediaType mediaType = response.body().contentType();
             String content = response.body().string();

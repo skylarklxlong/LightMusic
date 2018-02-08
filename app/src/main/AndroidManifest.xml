@@ -47,7 +47,8 @@
             android:name=".ui.activity.PlaylistActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.RadioDetailActivity" />
-        <activity android:name=".ui.activity.AlbumsDetailActivity"></activity>
+        <activity android:name=".ui.activity.AlbumsDetailActivity" />
+        <activity android:name=".ui.activity.LockActivity"></activity>
     </application>
 
 </manifest>

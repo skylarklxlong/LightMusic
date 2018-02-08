@@ -9,6 +9,7 @@ import online.himakeit.lightmusic.bean.BaiduMusicSongListEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicSongRankEntity;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.QueryMap;
 
 /**
@@ -26,11 +27,17 @@ public interface BaiduMusicApi {
     String BASE_URL = MUSIC_BASE_URL + SUB_URL;
 
     /**
+     * 之前在手机端一直不能访问数据成功，是因为服务器对请求头做了处理
+     * @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
+     */
+
+    /**
      * 获取歌单列表
      *
      * @param params
      * @return
      */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicSongListEntity> getSongList(@QueryMap Map<String, String> params);
 
@@ -40,6 +47,7 @@ public interface BaiduMusicApi {
      * @param params
      * @return
      */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicSongRankEntity> getSongRank(@QueryMap Map<String, String> params);
 
@@ -50,6 +58,7 @@ public interface BaiduMusicApi {
      * @param params
      * @return
      */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicBaseEntity<BaiduMusicNewSongEntity>> getNewSong(@QueryMap Map<String, String> params);
 
@@ -59,6 +68,7 @@ public interface BaiduMusicApi {
      * @param params
      * @return
      */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicPicBaseEntity> getPicData(@QueryMap Map<String, String> params);
 }
