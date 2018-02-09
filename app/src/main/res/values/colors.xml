@@ -25,4 +25,5 @@
     <color name="notification_bak">#47fafafa</color>
 
     <color name="line_color_white">#E0E0E0</color>
+    <color name="bottomSheetNormalBackground">#f9ffffff</color>
 </resources>
