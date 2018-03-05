@@ -3,8 +3,10 @@ package online.himakeit.lightmusic.network;
 import java.util.Map;
 
 import online.himakeit.lightmusic.bean.BaiduMusicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicLrcPicBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicNewSongEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicPicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicSongInfoBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicSongListEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicSongRankEntity;
 import retrofit2.Call;
@@ -71,4 +73,24 @@ public interface BaiduMusicApi {
     @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicPicBaseEntity> getPicData(@QueryMap Map<String, String> params);
+
+    /**
+     * 获取歌词图片
+     *
+     * @param params
+     * @return
+     */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
+    @GET(BASE_URL)
+    Call<BaiduMusicLrcPicBaseEntity> getLrcPic(@QueryMap Map<String, String> params);
+
+    /**
+     * 获取歌曲信息
+     *
+     * @param params
+     * @return
+     */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
+    @GET(BASE_URL)
+    Call<BaiduMusicSongInfoBaseEntity> getSongInfo(@QueryMap Map<String, String> params);
 }

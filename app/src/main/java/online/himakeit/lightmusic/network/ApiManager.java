@@ -4,10 +4,14 @@ import java.util.Map;
 
 import online.himakeit.lightmusic.AppContext;
 import online.himakeit.lightmusic.bean.BaiduMusicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicLrcPicBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicNewSongEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicPicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicSongInfoBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicSongListEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicSongRankEntity;
+import online.himakeit.lightmusic.util.AesTools;
+import online.himakeit.lightmusic.util.StringUtils;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -107,6 +111,45 @@ public class ApiManager {
         Map<String, String> params = BaiduNetHelper.getMusicApiCommonParams("baidu.ting.plaza.getFocusPic");
         params.put("num", String.valueOf(num));
         getBaiduMusicApi().getPicData(params).enqueue(callBack);
+    }
+
+    /**
+     * 获取歌词图片
+     *
+     * @param songname
+     * @param artist
+     * @param callBack
+     */
+    public void getLrcPicData(String songname, String artist, BaiduNetCallBack<BaiduMusicLrcPicBaseEntity> callBack) {
+
+        String query = StringUtils.encodeUtf8(songname) + "$$" + StringUtils.encodeUtf8(artist);
+        String ts = Long.toString(System.currentTimeMillis());
+        String e = AesTools.encrpty("query=" + songname + "$$" + artist + "&ts=" + ts);
+
+        Map<String, String> params = BaiduNetHelper.getMusicApiCommonParams("baidu.ting.search.lrcpic");
+        params.put("query", query);
+        params.put("type", "2");
+        params.put("ts", ts);
+        params.put("e", e);
+        getBaiduMusicApi().getLrcPic(params).enqueue(callBack);
+    }
+
+    /**
+     * 获取歌曲信息
+     *
+     * @param songId
+     * @param callBack
+     */
+    public void getSongInfo(String songId, BaiduNetCallBack<BaiduMusicSongInfoBaseEntity> callBack) {
+
+        long ts = System.currentTimeMillis();
+        String e = AesTools.encrpty("songid=" + songId + "&ts=" + ts);
+
+        Map<String, String> params = BaiduNetHelper.getMusicApiCommonParams("baidu.ting.song.getInfos");
+        params.put("songid", songId);
+        params.put("ts", String.valueOf(ts));
+        params.put("e", e);
+        getBaiduMusicApi().getSongInfo(params).enqueue(callBack);
     }
 
 }
