@@ -4,6 +4,7 @@ import java.util.Map;
 
 import online.himakeit.lightmusic.AppContext;
 import online.himakeit.lightmusic.bean.BaiduMusicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicGeDanInfoEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicLrcPicBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicNewSongEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicPicBaseEntity;
@@ -152,4 +153,15 @@ public class ApiManager {
         getBaiduMusicApi().getSongInfo(params).enqueue(callBack);
     }
 
+    /**
+     * 获取歌单信息
+     *
+     * @param listId
+     * @param callBack
+     */
+    public void getGeDanInfo(String listId, BaiduNetCallBack<BaiduMusicGeDanInfoEntity> callBack) {
+        Map<String, String> params = BaiduNetHelper.getMusicApiCommonParams("baidu.ting.diy.gedanInfo");
+        params.put("listid", listId);
+        getBaiduMusicApi().getGeDanInfo(params).enqueue(callBack);
+    }
 }

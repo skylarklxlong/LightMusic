@@ -47,4 +47,13 @@ public class Constants {
 
     public final static String LINE_BREAK = "\r\n";
     public final static String HTTP_END = LINE_BREAK + LINE_BREAK;
+
+    public static final String MUSIC_COUNT_CHANGED = "online.himakeit.lightmusic.musiccountchanged";
+    public static final String PLAYLIST_ITEM_MOVED = "online.himakeit.lightmusic.mmoved";
+    public static final String PLAYLIST_COUNT_CHANGED = "online.himakeit.lightmusic.playlistcountchanged";
+    public static final String CHANGE_THEME = "online.himakeit.lightmusic.themechange";
+    public static final String EMPTY_LIST = "online.himakeit.lightmusic.emptyplaylist";
+    public static final String PACKAGE = "online.himakeit.lightmusic";
+
+    public static final int FAV_PLAYLIST = 10;
 }

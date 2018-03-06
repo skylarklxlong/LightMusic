@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import online.himakeit.lightmusic.interfaces.MusicStateListener;
+import online.himakeit.lightmusic.ui.activity.BaseActivity;
 
 /**
  * @author：LiXueLong
@@ -32,12 +33,14 @@ public class BaseFragment extends Fragment implements MusicStateListener {
     @Override
     public void onResume() {
         super.onResume();
+        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
         reloadAdapter();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
     }
 
     @Override

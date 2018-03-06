@@ -3,6 +3,7 @@ package online.himakeit.lightmusic.network;
 import java.util.Map;
 
 import online.himakeit.lightmusic.bean.BaiduMusicBaseEntity;
+import online.himakeit.lightmusic.bean.BaiduMusicGeDanInfoEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicLrcPicBaseEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicNewSongEntity;
 import online.himakeit.lightmusic.bean.BaiduMusicPicBaseEntity;
@@ -93,4 +94,14 @@ public interface BaiduMusicApi {
     @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
     @GET(BASE_URL)
     Call<BaiduMusicSongInfoBaseEntity> getSongInfo(@QueryMap Map<String, String> params);
+
+    /**
+     * 获取歌单列表
+     *
+     * @param params
+     * @return
+     */
+    @Headers("user-agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4)")
+    @GET(BASE_URL)
+    Call<BaiduMusicGeDanInfoEntity> getGeDanInfo(@QueryMap Map<String, String> params);
 }
