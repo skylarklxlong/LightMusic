@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -132,6 +134,13 @@ public class PlaylistActivity extends BaseActivity {
         mFlTryAgain = (FrameLayout) findViewById(R.id.fl_playlist_try_again);
         mTvTryAgain = (TextView) findViewById(R.id.tv_playlist_try_again);
 
+        mTvHeaderAlbumTitle.setText(playlistName);
+        Glide.with(this)
+                .load(albumPath)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_disk_210)
+                .into(mIvPlayListArt);
+
         SpannableString mSpannStr = new SpannableString("cion");
         mSpannStr.setSpan(new ImageSpan(this,
                         BitmapFactory.decodeResource(getResources(),
@@ -176,7 +185,7 @@ public class PlaylistActivity extends BaseActivity {
             }
         });
 
-        if (!isLocalPlaylist) {
+        if (isLocalPlaylist) {
             mRlHeaderDetail.setVisibility(View.GONE);
         }
 
@@ -267,6 +276,11 @@ public class PlaylistActivity extends BaseActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mAdapter = new PlayListDetailAdapter(mDataList, this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void updateTrack() {
+        mAdapter.notifyDataSetChanged();
     }
 
     class PlayListDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
